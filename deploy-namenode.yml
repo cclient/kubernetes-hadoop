@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-master
+  labels:
+    app: hadoop-master
+spec:
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 22
+    targetPort: 22
+  - name: cluster
+    port: 8088
+    # nodePort: 8388
+    targetPort: 8088
+  - name: b
+    port: 8042
+    # nodePort: 8342
+    targetPort: 8042
+  - name: c
+    port: 50070
+    targetPort: 50070
+  - name: jupyter
+    port: 8888
+    # nodePort: 8488
+    targetPort: 8888
+  - name: e
+    port: 4040
+    # nodePort: 8340
+    targetPort: 4040
+  - name: f
+    port: 8787
+    # nodePort: 8387
+    targetPort: 8787
+  - name: g
+    port: 9000
+    targetPort: 9000
+  - name: h
+    port: 60010
+    targetPort: 60010
+  - name: i
+    port: 60030
+    targetPort: 60030
+  selector:
+    app: hadoop-master
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hadoop-master
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hadoop-master
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - hadoop-master
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: hadoop-master
+        image: hadoop:2.8.3-namenode
+        env:
+        - name: NODES
+          value: hadoop-node
+        - name: HOSTNODE
+          value: hadoop-master
+        ports:
+        - containerPort: 22
+          name: ssh
+        - containerPort: 8088
+        - containerPort: 8042
+        - containerPort: 50070
+        - containerPort: 8888
+        - containerPort: 8080
+        - containerPort: 4040
+        - containerPort: 8787
+        - containerPort: 9000
+        - containerPort: 60010
+        - containerPort: 60030
+      imagePullSecrets:
+       - name: cuidapeng

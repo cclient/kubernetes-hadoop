@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-node
+  labels:
+    app: hadoop-node
+spec:
+  ports:
+  - name: ssh
+    port: 22
+    targetPort: 22
+  selector:
+    app: hadoop-node
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hadoop-node
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hadoop-node
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - hadoop-node
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: hadoop-node
+        image: hadoop:2.8.3-datanode
+        ports:
+        - containerPort: 22
+          name: ssh
+      imagePullSecrets:
+       - name: cuidapeng
