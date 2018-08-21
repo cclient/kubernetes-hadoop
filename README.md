@@ -6,7 +6,7 @@ cluster/cluster.sh [origin](https://github.com/luvres/hadoop/blob/master/cluster
 
 datanode/start.sh [origin](https://github.com/luvres/hadoop/blob/master/cluster/datanode/start.sh)
 
-## build images
+## images
 
 ### datanode
 
@@ -16,7 +16,7 @@ docker build -t hadoop:2.8.3-datanode ./
 
 ### namenode
 
-cd cluster.sh
+cd ../cluster
 
 docker build -t hadoop:2.8.3-cluster ./
 
