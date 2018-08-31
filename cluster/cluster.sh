@@ -33,6 +33,15 @@ hostsNodes(){
   HADOOP=$HADOOP_HOME/etc/hadoop
   SPARK=$SPARK_HOME/conf
   HBASE=$HBASE_HOME/conf
+
+  for NODE in ${NODES}
+  do
+    # sed -i "/${NODE}/d" /etc/hosts
+    echo "Get Node $NODE IP"
+    nodeHostInfo=$(ssh $NODE "cat /etc/hosts |grep '${NODE}'")
+    echo "${nodeHostInfo}" >> /etc/hosts
+  done
+
   TEMP=$(cat /etc/hosts | grep hadoop)
   for NODE in ${NODES}
   do
@@ -49,7 +58,6 @@ hostsNodes(){
     do
       scp $f $NODE:$f
       ssh $NODE mv ${HBASE}/hbase-site_slave.xml ${HBASE}/hbase-site.xml
-      ssh $NODE echo ${TEMP} >> /etc/hosts
     done &>/dev/null
   done
 }; hostsNodes
