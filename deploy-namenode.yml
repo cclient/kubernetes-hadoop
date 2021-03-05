@@ -1,56 +1,13 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: hadoop-master
-  labels:
-    app: hadoop-master
-spec:
-  type: NodePort
-  ports:
-  - name: ssh
-    port: 22
-    targetPort: 22
-  - name: cluster
-    port: 8088
-    # nodePort: 8388
-    targetPort: 8088
-  - name: b
-    port: 8042
-    # nodePort: 8342
-    targetPort: 8042
-  - name: c
-    port: 50070
-    targetPort: 50070
-  - name: jupyter
-    port: 8888
-    # nodePort: 8488
-    targetPort: 8888
-  - name: e
-    port: 4040
-    # nodePort: 8340
-    targetPort: 4040
-  - name: f
-    port: 8787
-    # nodePort: 8387
-    targetPort: 8787
-  - name: g
-    port: 9000
-    targetPort: 9000
-  - name: h
-    port: 60010
-    targetPort: 60010
-  - name: i
-    port: 60030
-    targetPort: 60030
-  selector:
-    app: hadoop-master
----
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: hadoop-master
 spec:
+  serviceName: "hadoop-master"
   replicas: 1
+  selector:
+    matchLabels:
+      app: hadoop-master
   template:
     metadata:
       labels:
@@ -68,7 +25,9 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: hadoop-master
-        image: hadoop:2.8.3-namenode
+        image: cclient/hadoop:2.8.3-namenode
+        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         env:
         - name: NODES
           value: hadoop-node
@@ -87,5 +46,58 @@ spec:
         - containerPort: 9000
         - containerPort: 60010
         - containerPort: 60030
-      imagePullSecrets:
-       - name: cuidapeng
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-master
+  labels:
+    app: hadoop-master
+spec:
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 22
+    nodePort: 32620
+    targetPort: 22
+  - name: hadoop-cluster-info
+    port: 8088
+    nodePort: 32688
+    targetPort: 8088
+  - name: b
+    port: 8042
+    # nodePort: 8342
+    targetPort: 8042
+  - name: c
+    port: 50030
+    nodePort: 32630
+    targetPort: 50030
+  - name: hadoop-namenode-info
+    port: 50070
+    nodePort: 32670
+    targetPort: 50070
+  - name: jupyter-notebook
+    port: 8888
+    nodePort: 32488
+    targetPort: 8888
+  - name: e
+    port: 4040
+    # nodePort: 8340
+    targetPort: 4040
+  - name: f
+    port: 8787
+    # nodePort: 8387
+    targetPort: 8787
+  - name: g
+    port: 9000
+    targetPort: 9000
+  - name: hbase-master-info
+    port: 60010
+    nodePort: 32510
+    targetPort: 60010
+  - name: hbase-regionserver-info
+    port: 60030
+    nodePort: 32530
+    targetPort: 60030
+  selector:
+    app: hadoop-master        
