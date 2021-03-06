@@ -12,7 +12,7 @@ datanode/start.sh [origin](https://github.com/luvres/hadoop/blob/master/cluster/
 
 cd ../datanode
 
-docker build -t hadoop:2.8.3-datanode ./
+docker build -t cclient/hadoop:2.8.3-datanode ./
 
 docker build --build-arg http_proxy= --build-arg https_proxy= -t cclient/hadoop:2.8.3-datanode ./
 
@@ -20,7 +20,7 @@ docker build --build-arg http_proxy= --build-arg https_proxy= -t cclient/hadoop:
 
 cd ../cluster
 
-docker build -t hadoop:2.8.3-cluster ./
+docker build -t cclient/hadoop:2.8.3-namenode ./
 
 docker build --build-arg http_proxy= --build-arg https_proxy= -t cclient/hadoop:2.8.3-namenode ./
 
