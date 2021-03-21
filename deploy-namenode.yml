@@ -1,3 +1,57 @@
+---
+# hive metastore
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hadoop-hive-mysql
+  name: hadoop-hive-mysql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hadoop-hive-mysql
+  template:
+    metadata:
+      labels:
+        app: hadoop-hive-mysql
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: hadoop        
+        - name: HOST
+          value: 0.0.0.0
+        - name: TZ
+          value: Asia/Shanghai
+        image: mysql:5.7.33
+        name: hadoop-hive-mysql
+        # volumeMounts:
+        # - mountPath: /var/lib/mysql
+        #   name: data
+        ports:
+        - containerPort: 3306
+      # volumes:
+      # - hostPath:
+      #     path: /data/pv/hadoop-hive-mysql
+      #     type: ""
+      #   name: data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-hive-mysql
+  namespace: default
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: hadoop-hive-mysql
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -99,5 +153,13 @@ spec:
     port: 60030
     nodePort: 32530
     targetPort: 60030
+  - name: hiveserver2-jdbc
+    port: 10000
+    nodePort: 32000
+    targetPort: 10000    
+  - name: hiveserver2-web
+    port: 10002
+    nodePort: 32002
+    targetPort: 10002        
   selector:
     app: hadoop-master        

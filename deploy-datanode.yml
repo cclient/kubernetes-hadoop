@@ -42,6 +42,21 @@ spec:
   ports:
   - name: ssh
     port: 22
-    targetPort: 22
+    targetPort: 22    
+  - name: "8040"
+    port: 8040
+    targetPort: 8040
+  - name: "8042"
+    port: 8042
+    targetPort: 8042
+  - name: "50010 "
+    port: 50010 
+    targetPort: 50010 
+  - name: "50020"
+    port: 50020
+    targetPort: 50020
+  - name: "50075"
+    port: 50075
+    targetPort: 50075
   selector:
     app: hadoop-node

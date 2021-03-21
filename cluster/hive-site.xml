@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:mysql://hadoop-hive-mysql/hive?createDatabaseIfNotExist=true</value>
+        <description>JDBC connect string for a JDBC metastore</description>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>com.mysql.jdbc.Driver</value>
+        <description>Driver class name for a JDBC metastore</description>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>root</value>
+        <description>username to use against metastore database</description>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>hadoop</value>
+        <description>password to use against metastore database</description>
+    </property>
+    <property>
+        <name>hive.server2.enable.doAs</name>
+        <value>FALSE</value>
+        <description>Setting this property to true will have HiveServer2 execute Hive operations as the user making the calls to it.
+        </description>
+    </property>
+    <property>
+        <name>hive.server2.support.dynamic.service.discovery</name>
+        <value>true</value>
+        <description>Whether HiveServer2 supports dynamic service discovery for its clients. To support this, each instance of HiveServer2 currently uses ZooKeeper to register itself, when it is brought up. JDBC/ODBC clients should use the ZooKeeper ensemble: hive.zookeeper.quorum in their connection string.</description>
+    </property>
+</configuration>
